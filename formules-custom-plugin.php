@@ -983,168 +983,161 @@ function fcp_append_formule_content($content)
     foreach ($sections as $key => $data) {
         $show = get_post_meta($post->ID, '_fcp_show_' . $key, true);
         $selected = get_post_meta($post->ID, '_fcp_selected_' . $key, true);
+        $custom_btn_active = get_post_meta($post->ID, '_fcp_custom_btn_active_' . $key, true);
+        $custom_btn_label = get_post_meta($post->ID, '_fcp_custom_btn_label_' . $key, true);
+        $custom_btn_content = get_post_meta($post->ID, '_fcp_custom_btn_content_' . $key, true);
 
-        if ($show === '1' && !empty($selected)) {
-            $assoc_post = get_post($selected);
-            if ($assoc_post) {
-                // Bouton pour ouvrir la modale standard (Plat/Buffet/Option)
-                $buttons .= '<button type="button" class="fcp-modal-button" data-modal="fcp-modal-' . esc_attr($key) . '">' . esc_html($data['label']) . '</button>';
-                
-                // --- DEBUT MODIFICATION : Bouton Popup Personnalisé ---
-                $custom_btn_active = get_post_meta($post->ID, '_fcp_custom_btn_active_' . $key, true);
-                $custom_btn_label = get_post_meta($post->ID, '_fcp_custom_btn_label_' . $key, true);
-                $custom_btn_content = get_post_meta($post->ID, '_fcp_custom_btn_content_' . $key, true);
-                
-                if ($custom_btn_active === '1' && !empty($custom_btn_label)) {
-                    // 1. Création du bouton
-                    $buttons .= '<button type="button" class="fcp-modal-button fcp-custom-popup-button" data-modal="fcp-custom-modal-' . esc_attr($key) . '">' . esc_html($custom_btn_label) . '</button>';
+        if ($show === '1') {
+            // Bouton popup personnalisé (indépendant de la sélection d'un contenu associé)
+            if ($custom_btn_active === '1' && !empty($custom_btn_label)) {
+                $buttons .= '<button type="button" class="fcp-modal-button fcp-custom-popup-button" data-modal="fcp-custom-modal-' . esc_attr($key) . '">' . esc_html($custom_btn_label) . '</button>';
 
-                    // 2. Création de la modale associée (qui manquait)
-                    $modals .= '<div id="fcp-custom-modal-' . esc_attr($key) . '" class="fcp-modal">';
-                    $modals .= '<div class="fcp-modal-content">';
-                    $modals .= '<span class="fcp-modal-close">&times;</span>';
-                    
-                    // Bannière pour la modale personnalisée (titre sur fond couleur par défaut)
-                    $modals .= '<div class="fcp-modal-banner">';
-                    $modals .= '<div class="fcp-modal-banner-overlay">';
-                    $modals .= '<h2>' . esc_html($custom_btn_label) . '</h2>';
-                    $modals .= '</div>';
-                    $modals .= '</div>';
-                    
-                    // Corps de la modale avec le contenu libre
-                    $modals .= '<div class="fcp-modal-body">';
-                    $modals .= '<div class="fcp-modal-description">';
-                    $modals .= wpautop($custom_btn_content);
-                    $modals .= '</div>'; // fin description
-                    $modals .= '</div>'; // fin body
-                    
-                    $modals .= '</div>'; // fin content
-                    $modals .= '</div>'; // fin modal
-                }
-                // --- FIN MODIFICATION ---
+                $custom_content = apply_filters('the_content', $custom_btn_content);
 
-                // Récupérer l'image de bannière standard
-                $banner_id = get_post_meta($selected, '_fcp_banner_image', true);
-                $banner_url = $banner_id ? wp_get_attachment_url($banner_id) : '';
-
-                // Récupérer la liste d'items depuis le post associé
-                $meta_key = '_fcp_items_' . $data['cpt'];
-                $items = get_post_meta($selected, $meta_key, true);
-
-                // Créer la modal standard
-                $modals .= '<div id="fcp-modal-' . esc_attr($key) . '" class="fcp-modal">';
+                $modals .= '<div id="fcp-custom-modal-' . esc_attr($key) . '" class="fcp-modal">';
                 $modals .= '<div class="fcp-modal-content">';
                 $modals .= '<span class="fcp-modal-close">&times;</span>';
-
-                // Bannière de la modal
-                $modals .= '<div class="fcp-modal-banner" style="background-image: url(\'' . esc_url($banner_url) . '\')">';
+                $modals .= '<div class="fcp-modal-banner">';
                 $modals .= '<div class="fcp-modal-banner-overlay">';
-                $modals .= '<h2>' . esc_html($assoc_post->post_title) . '</h2>';
+                $modals .= '<h2>' . esc_html($custom_btn_label) . '</h2>';
                 $modals .= '</div>';
                 $modals .= '</div>';
-
                 $modals .= '<div class="fcp-modal-body">';
+                $modals .= '<div class="fcp-modal-description">' . $custom_content . '</div>';
+                $modals .= '</div>';
+                $modals .= '</div>';
+                $modals .= '</div>';
+            }
 
-                // Description générale
-                if (!empty($assoc_post->post_content)) {
-                    $modals .= '<div class="fcp-modal-description">';
-                    $modals .= wpautop($assoc_post->post_content);
+            if (!empty($selected)) {
+                $assoc_post = get_post($selected);
+                if ($assoc_post) {
+                    // Bouton pour ouvrir la modale standard (Plat/Buffet/Option)
+                    $buttons .= '<button type="button" class="fcp-modal-button" data-modal="fcp-modal-' . esc_attr($key) . '">' . esc_html($data['label']) . '</button>';
+
+                    // Récupérer l'image de bannière standard
+                    $banner_id = get_post_meta($selected, '_fcp_banner_image', true);
+                    $banner_url = $banner_id ? wp_get_attachment_url($banner_id) : '';
+
+                    // Récupérer la liste d'items depuis le post associé
+                    $meta_key = '_fcp_items_' . $data['cpt'];
+                    $items = get_post_meta($selected, $meta_key, true);
+
+                    // Créer la modal standard
+                    $modals .= '<div id="fcp-modal-' . esc_attr($key) . '" class="fcp-modal">';
+                    $modals .= '<div class="fcp-modal-content">';
+                    $modals .= '<span class="fcp-modal-close">&times;</span>';
+
+                    // Bannière de la modal
+                    $modals .= '<div class="fcp-modal-banner" style="background-image: url(\'' . esc_url($banner_url) . '\')">';
+                    $modals .= '<div class="fcp-modal-banner-overlay">';
+                    $modals .= '<h2>' . esc_html($assoc_post->post_title) . '</h2>';
                     $modals .= '</div>';
-                }
+                    $modals .= '</div>';
 
-                // Liste des items (Logique standard existante)
-                if (is_array($items) && !empty($items)) {
-                    $items_count = count($items);
-                    $column_class = '';
-                    if ($items_count > 20) {
-                        $column_class = 'three-columns';
-                    } elseif ($items_count > 10) {
-                        $column_class = 'two-columns';
+                    $modals .= '<div class="fcp-modal-body">';
+
+                    // Description générale
+                    if (!empty($assoc_post->post_content)) {
+                        $modals .= '<div class="fcp-modal-description">';
+                        $modals .= wpautop($assoc_post->post_content);
+                        $modals .= '</div>';
                     }
 
-                    // Vérifier si nous avons des sections
-                    $sections_data = get_post_meta($selected, $meta_key . '_sections', true);
+                    // Liste des items (Logique standard existante)
+                    if (is_array($items) && !empty($items)) {
+                        $items_count = count($items);
+                        $column_class = '';
+                        if ($items_count > 20) {
+                            $column_class = 'three-columns';
+                        } elseif ($items_count > 10) {
+                            $column_class = 'two-columns';
+                        }
 
-                    if (is_array($sections_data) && !empty($sections_data)) {
-                        // Affichage avec sections
-                        foreach ($sections_data as $section) {
-                            if (!empty($section['title'])) {
-                                $modals .= '<h3 class="fcp-section-title">' . esc_html($section['title']) . '</h3>';
-                            }
+                        // Vérifier si nous avons des sections
+                        $sections_data = get_post_meta($selected, $meta_key . '_sections', true);
 
-                            if (!empty($section['items'])) {
-                                $modals .= '<ul class="fcp-items-list ' . esc_attr($column_class) . '">';
-                                foreach ($section['items'] as $item) {
-                                    $modals .= '<li>';
+                        if (is_array($sections_data) && !empty($sections_data)) {
+                            // Affichage avec sections
+                            foreach ($sections_data as $section) {
+                                if (!empty($section['title'])) {
+                                    $modals .= '<h3 class="fcp-section-title">' . esc_html($section['title']) . '</h3>';
+                                }
 
-                                    // Titre et prix sur la même ligne
-                                    $modals .= '<div class="fcp-item-title">';
-                                    $modals .= '<span class="fcp-item-name">' . esc_html($item['title']) . '</span>';
-                                    if (!empty($item['price']) && $item['price'] > 0) {
-                                        $modals .= '<span class="fcp-item-price">' . number_format($item['price'], 2, ',', ' ') . ' €</span>';
-                                    }
-                                    $modals .= '</div>';
+                                if (!empty($section['items'])) {
+                                    $modals .= '<ul class="fcp-items-list ' . esc_attr($column_class) . '">';
+                                    foreach ($section['items'] as $item) {
+                                        $modals .= '<li>';
 
-                                    // Image pour les buffets (placée après le titre)
-                                    if ($data['cpt'] === 'nos_buffets' && !empty($item['image'])) {
-                                        $image_url = wp_get_attachment_image_url($item['image'], 'thumbnail');
-                                        if ($image_url) {
-                                            $modals .= '<div class="fcp-item-image"><img src="' . esc_url($image_url) . '" alt="' . esc_attr($item['title']) . '"></div>';
+                                        // Titre et prix sur la même ligne
+                                        $modals .= '<div class="fcp-item-title">';
+                                        $modals .= '<span class="fcp-item-name">' . esc_html($item['title']) . '</span>';
+                                        if (!empty($item['price']) && $item['price'] > 0) {
+                                            $modals .= '<span class="fcp-item-price">' . number_format($item['price'], 2, ',', ' ') . ' €</span>';
                                         }
+                                        $modals .= '</div>';
+
+                                        // Image pour les buffets (placée après le titre)
+                                        if ($data['cpt'] === 'nos_buffets' && !empty($item['image'])) {
+                                            $image_url = wp_get_attachment_image_url($item['image'], 'thumbnail');
+                                            if ($image_url) {
+                                                $modals .= '<div class="fcp-item-image"><img src="' . esc_url($image_url) . '" alt="' . esc_attr($item['title']) . '"></div>';
+                                            }
+                                        }
+
+                                        // Informations complémentaires
+                                        if (!empty($item['info'])) {
+                                            // Nettoyer et formater le contenu pour l'afficher en italique
+                                            $info_content = wp_kses_post($item['info']);
+                                            // Remplacer les balises <p> par des <p class="fcp-item-info-text">
+                                            $info_content = str_replace('<p>', '<p class="fcp-item-info-text">', $info_content);
+                                            $modals .= '<div class="fcp-item-info">' . $info_content . '</div>';
+                                        }
+
+                                        $modals .= '</li>';
                                     }
-
-                                    // Informations complémentaires
-                                    if (!empty($item['info'])) {
-                                        // Nettoyer et formater le contenu pour l'afficher en italique
-                                        $info_content = wp_kses_post($item['info']);
-                                        // Remplacer les balises <p> par des <p class="fcp-item-info-text">
-                                        $info_content = str_replace('<p>', '<p class="fcp-item-info-text">', $info_content);
-                                        $modals .= '<div class="fcp-item-info">' . $info_content . '</div>';
-                                    }
-
-                                    $modals .= '</li>';
-                                }
-                                $modals .= '</ul>';
-                            }
-                        }
-                    } else {
-                        // Affichage classique sans sections (pour la rétrocompatibilité)
-                        $modals .= '<ul class="fcp-items-list ' . esc_attr($column_class) . '">';
-                        foreach ($items as $item) {
-                            $modals .= '<li>';
-
-                            // Titre et prix sur la même ligne
-                            $modals .= '<div class="fcp-item-title">';
-                            $modals .= '<span class="fcp-item-name">' . esc_html($item['title']) . '</span>';
-                            if (!empty($item['price']) && $item['price'] > 0) {
-                                $modals .= '<span class="fcp-item-price">' . number_format($item['price'], 2, ',', ' ') . ' €</span>';
-                            }
-                            $modals .= '</div>';
-
-                            // Image pour les buffets (placée après le titre)
-                            if ($data['cpt'] === 'nos_buffets' && !empty($item['image'])) {
-                                $image_url = wp_get_attachment_image_url($item['image'], 'thumbnail');
-                                if ($image_url) {
-                                    $modals .= '<div class="fcp-item-image"><img src="' . esc_url($image_url) . '" alt="' . esc_attr($item['title']) . '"></div>';
+                                    $modals .= '</ul>';
                                 }
                             }
+                        } else {
+                            // Affichage classique sans sections (pour la rétrocompatibilité)
+                            $modals .= '<ul class="fcp-items-list ' . esc_attr($column_class) . '">';
+                            foreach ($items as $item) {
+                                $modals .= '<li>';
 
-                            // Informations complémentaires
-                            if (!empty($item['info'])) {
-                                // Nettoyer et formater le contenu pour l'afficher en italique
-                                $info_content = wp_kses_post($item['info']);
-                                // Remplacer les balises <p> par des <p class="fcp-item-info-text">
-                                $info_content = str_replace('<p>', '<p class="fcp-item-info-text">', $info_content);
-                                $modals .= '<div class="fcp-item-info">' . $info_content . '</div>';
+                                // Titre et prix sur la même ligne
+                                $modals .= '<div class="fcp-item-title">';
+                                $modals .= '<span class="fcp-item-name">' . esc_html($item['title']) . '</span>';
+                                if (!empty($item['price']) && $item['price'] > 0) {
+                                    $modals .= '<span class="fcp-item-price">' . number_format($item['price'], 2, ',', ' ') . ' €</span>';
+                                }
+                                $modals .= '</div>';
+
+                                // Image pour les buffets (placée après le titre)
+                                if ($data['cpt'] === 'nos_buffets' && !empty($item['image'])) {
+                                    $image_url = wp_get_attachment_image_url($item['image'], 'thumbnail');
+                                    if ($image_url) {
+                                        $modals .= '<div class="fcp-item-image"><img src="' . esc_url($image_url) . '" alt="' . esc_attr($item['title']) . '"></div>';
+                                    }
+                                }
+
+                                // Informations complémentaires
+                                if (!empty($item['info'])) {
+                                    // Nettoyer et formater le contenu pour l'afficher en italique
+                                    $info_content = wp_kses_post($item['info']);
+                                    // Remplacer les balises <p> par des <p class="fcp-item-info-text">
+                                    $info_content = str_replace('<p>', '<p class="fcp-item-info-text">', $info_content);
+                                    $modals .= '<div class="fcp-item-info">' . $info_content . '</div>';
+                                }
+
+                                $modals .= '</li>';
                             }
-
-                            $modals .= '</li>';
+                            $modals .= '</ul>';
                         }
-                        $modals .= '</ul>';
                     }
-                }
 
-                $modals .= '</div></div></div>';
+                    $modals .= '</div></div></div>';
+                }
             }
         }
     }
