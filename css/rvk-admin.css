@@ -1,0 +1,220 @@
+/**
+ * Styles CSS pour l'administration du plugin RVK
+ */
+
+/* Styles généraux */
+.rvk-admin-wrap {
+    max-width: 1200px;
+    margin: 20px 0;
+}
+
+.rvk-admin-header {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.rvk-admin-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.rvk-admin-header p {
+    font-size: 14px;
+    color: #666;
+    margin-top: 0;
+}
+
+/* Cartes */
+.rvk-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.rvk-card h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.rvk-card-content {
+    margin-bottom: 15px;
+}
+
+/* Onglets */
+.rvk-tabs {
+    display: flex;
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.rvk-tabs li {
+    margin: 0;
+    padding: 0;
+}
+
+.rvk-tabs li a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #666;
+    font-weight: 500;
+    border: 1px solid transparent;
+    border-bottom: none;
+    margin-bottom: -1px;
+}
+
+.rvk-tabs li.active a {
+    background: #fff;
+    color: #0073aa;
+    border-color: #ccc;
+    border-bottom-color: #fff;
+}
+
+.rvk-tab-content {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/* Formulaires */
+.rvk-form-row {
+    margin-bottom: 15px;
+}
+
+.rvk-form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.rvk-form-row input[type="text"],
+.rvk-form-row input[type="number"],
+.rvk-form-row select,
+.rvk-form-row textarea {
+    width: 100%;
+    max-width: 400px;
+}
+
+.rvk-form-row .description {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Boutons */
+.rvk-button-row {
+    margin-top: 20px;
+}
+
+.rvk-flush-rules-button {
+    background-color: #0073aa !important;
+    border-color: #0073aa !important;
+}
+
+.rvk-update-permalinks-button {
+    background-color: #d54e21 !important;
+    border-color: #d54e21 !important;
+    color: #fff !important;
+}
+
+/* Notices */
+.rvk-notice {
+    background: #fff;
+    border-left: 4px solid #0073aa;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    margin: 15px 0;
+    padding: 12px;
+}
+
+.rvk-notice.rvk-notice-warning {
+    border-left-color: #ffb900;
+}
+
+.rvk-notice.rvk-notice-error {
+    border-left-color: #dc3232;
+}
+
+.rvk-notice.rvk-notice-success {
+    border-left-color: #46b450;
+}
+
+/* Tableau de bord */
+.rvk-dashboard-widgets {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+}
+
+.rvk-dashboard-widget {
+    flex: 1 1 300px;
+    margin: 0 10px 20px;
+    min-width: 300px;
+}
+
+.rvk-dashboard-widget h3 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Statistiques */
+.rvk-stats {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+}
+
+.rvk-stat-box {
+    flex: 1 1 200px;
+    margin: 0 10px 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.rvk-stat-number {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #0073aa;
+}
+
+.rvk-stat-label {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .rvk-tabs {
+        flex-direction: column;
+        border-bottom: none;
+    }
+    
+    .rvk-tabs li a {
+        border: 1px solid #ccc;
+        margin-bottom: 5px;
+    }
+    
+    .rvk-tabs li.active a {
+        border-bottom-color: #ccc;
+    }
+    
+    .rvk-tab-content {
+        border-top: 1px solid #ccc;
+    }
+} 

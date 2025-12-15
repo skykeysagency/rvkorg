@@ -1,0 +1,709 @@
+/* Grille de pricing en colonnes */
+.fcp-pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+    padding: 20px;
+}
+
+/* Styles pour le slider (Swiper) */
+
+/* Styles pour les modals */
+.fcp-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.fcp-modal.active {
+    opacity: 1;
+}
+
+.fcp-modal-content {
+    position: relative;
+    background-color: #fff;
+    margin: 2% auto;
+    padding: 0;
+    width: 95%;
+    max-width: 800px;
+    border-radius: 15px;
+    overflow-y: auto;
+    max-height: 90vh;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-50px);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.fcp-modal.active .fcp-modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.fcp-modal-close {
+    position: absolute;
+    right: 15px;
+    top: 15px; 
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #666;
+    z-index: 1;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.fcp-modal-close:hover {
+    color: #333;
+}
+
+.fcp-modal-body {
+    padding: 40px;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Style pour le formulaire dans la modal */
+#formule-contact-form {
+    margin: 0;
+    max-width: 100%;
+    padding-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+}
+
+.form-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 15px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #D6A681;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-group input[type="date"] {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 12px;
+}
+
+/* Style du bouton submit */
+.submit-button {
+    background-color: #D6A681;
+    color: white;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.submit-button:hover {
+    background-color: #D6A681;
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(214, 166, 129, 0.3);
+}
+
+/* Indication des champs requis */
+.form-group label.required::after {
+    content: " *";
+    color: #D6A681;
+}
+
+/* Style pour le message de confirmation de la formule choisie */
+#formule-choisie-titre {
+    color: #D6A681;
+    font-weight: 600;
+}
+
+/* Ajustements responsive */
+@media (max-width: 768px) {
+    .fcp-modal-content {
+        margin: 2% auto;
+        width: 95%;
+        max-width: none;
+        max-height: 95vh;
+    }
+    
+    .fcp-modal-body {
+        padding: 20px;
+    }
+    
+    #modal-formule-contact h2 {
+        font-size: 20px;
+    }
+    .form-fields-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 0;
+    }
+}
+
+.fcp-modal-banner {
+    width: 100%;
+    height: 200px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: #D6A681;
+    position: relative;
+}
+
+.fcp-modal-banner:not([style*="background-image"]) {
+    background-color: #D6A681;
+}
+
+.fcp-modal-banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fcp-modal h2 {
+    color: #fff;
+    text-align: center;
+    font-size: 2em;
+    margin: 0;
+    padding: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    width: 100%;
+}
+
+.fcp-modal .fcp-items-list {
+    padding: 40px;
+    margin: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 60px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1em;
+}
+
+.fcp-modal .fcp-items-list.two-columns {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.fcp-modal .fcp-items-list.three-columns {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.fcp-modal .fcp-items-list li {
+    padding: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    text-align: center;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.fcp-modal .fcp-items-list li:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.fcp-modal .fcp-item-title {
+    font-weight: 700;
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    color: #000;
+    font-style: italic;
+    letter-spacing: 0.5px;
+}
+
+.fcp-modal .fcp-item-info {
+    font-size: 1em;
+    color: #333;
+    margin-top: 5px;
+    text-align: center;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.fcp-modal .fcp-item-info p {
+    margin: 0 0 4px 0;
+}
+
+.fcp-modal .fcp-item-info ul, 
+.fcp-modal .fcp-item-info ol {
+    margin: 4px 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+.fcp-modal .fcp-item-info ul li, 
+.fcp-modal .fcp-item-info ol li {
+    padding: 2px 0;
+    margin: 0;
+    text-align: center;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.fcp-modal .fcp-items-list h3 {
+    font-size: 2em;
+    color: #000;
+    text-align: center;
+    margin-bottom: 40px;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #D6A681;
+    padding-bottom: 15px;
+}
+
+/* Ajout d'une classe pour le prix dans le titre */
+.fcp-modal .fcp-item-price {
+    font-weight: 600;
+    color: #000;
+    font-style: normal;
+    margin-left: 5px;
+}
+
+@media (max-width: 1024px) {
+    .fcp-modal .fcp-items-list {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 768px) {
+    .fcp-modal .fcp-items-list,
+    .fcp-modal .fcp-items-list.two-columns,
+    .fcp-modal .fcp-items-list.three-columns {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 20px;
+    }
+    
+    .fcp-modal .fcp-items-list h3 {
+        font-size: 1.8em;
+    }
+    
+    .fcp-modal .fcp-item-title {
+        font-size: 1.2em;
+    }
+}
+
+/* Style spécifique pour les images de buffet */
+.fcp-modal .fcp-item-image {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #D6A681;
+}
+
+.fcp-modal .fcp-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Boutons des sections associées */
+.fcp-related-buttons {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.fcp-related-buttons .fcp-modal-button {
+    min-width: 200px;
+    padding: 12px 30px;
+    background-color: #D6A681;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(214, 166, 129, 0.2);
+}
+
+.fcp-related-buttons .fcp-modal-button:hover {
+    background-color: #D6A681;
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(214, 166, 129, 0.3);
+    color: #fff;
+}
+
+.fcp-pricing-grid, .fcp-pricing-slider {
+    margin-top: 20px;
+}
+
+.fcp-pricing_item {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.fcp-pricing_item:hover {
+    transform: translateY(-5px);
+}
+
+.fcp-pricing_item h3 {
+    margin: 0 0 20px 0;
+    text-align: center;
+    font-size: 1.8em;
+    color: #333;
+    font-weight: 600;
+}
+
+.fcp-pricing_item .pricing-content {
+    flex-grow: 1;
+    margin-bottom: 20px;
+}
+
+.fcp-pricing_item .pricing-content ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.fcp-price {
+    font-size: 2em;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.fcp-choose-button {
+    display: inline-block;
+    width: auto;
+    min-width: 200px;
+    margin: 0 auto;
+    padding: 12px 25px;
+    background-color: #D6A681;
+    color: #fff;
+    text-align: center;
+    border: none;
+    border-radius: 30px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.fcp-choose-button:hover {
+    background-color: #D6A681;
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(214, 166, 129, 0.3);
+    color: #fff;
+}
+
+/* Styles pour la bannière */
+.fcp-banner-container {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    margin-top: -50px; /* Pour compenser l'espace du header */
+    margin-bottom: 2em;
+}
+
+.fcp-banner {
+    width: 100%;
+    height: 250px; /* Hauteur augmentée */
+    position: relative;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.fcp-banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fcp-banner-title {
+    color: #fff;
+    text-align: center;
+    font-size: 2.5em; /* Taille de police augmentée */
+    margin: 0;
+    padding: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.fcp-content {
+    max-width: var(--wp--style--global--content-size, 1200px);
+    margin: 0 auto;
+    padding: 0 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .fcp-banner {
+        height: 180px; /* Hauteur augmentée en mobile aussi */
+    }
+    .fcp-banner-title {
+        font-size: 1.8em;
+    }
+}
+
+.fcp-banner-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.fcp-modal-description {
+    padding: 40px;
+    margin: 0;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #333;
+    border-bottom: 1px solid #eee;
+}
+
+.fcp-modal-description p:last-child {
+    margin-bottom: 0;
+}
+
+.fcp-modal-description ul,
+.fcp-modal-description ol {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.fcp-modal-description li {
+    margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    .fcp-modal-content {
+        margin: 15px auto;
+        width: 95%;
+    }
+
+    .fcp-modal-description,
+    .fcp-items-list {
+        padding: 20px;
+    }
+}
+
+#modal-formule-contact h2 {
+    color: #333;
+    font-size: 24px;
+    margin: 0 0 20px 0;
+    text-align: left;
+}
+
+#modal-formule-contact p {
+    margin-bottom: 30px;
+    text-align: left;
+    font-size: 16px;
+    color: #666;
+}
+
+/* Styles pour la galerie modal */
+.rvk-gallery-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.rvk-gallery-modal {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.rvk-gallery-modal img {
+    max-width: 100%;
+    max-height: 80vh;
+    display: block;
+    border: 5px solid #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.rvk-gallery-caption {
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.rvk-gallery-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.rvk-gallery-close:hover {
+    transform: scale(1.2);
+}
+
+.rvk-no-scroll {
+    overflow: hidden;
+}
+
+/* Styles pour les éléments de la galerie */
+.fcp-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.fcp-gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.fcp-gallery-item:hover {
+    transform: translateY(-5px);
+}
+
+.fcp-gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.fcp-gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Messages de formulaire */
+.fcp-message {
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+    text-align: center;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+    animation: fadeInOut 5s forwards;
+}
+
+.fcp-message.success {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+.fcp-message.error {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+}
