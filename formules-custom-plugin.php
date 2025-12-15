@@ -987,19 +987,43 @@ function fcp_append_formule_content($content)
         if ($show === '1' && !empty($selected)) {
             $assoc_post = get_post($selected);
             if ($assoc_post) {
-                // Bouton pour ouvrir la modale
+                // Bouton pour ouvrir la modale standard (Plat/Buffet/Option)
                 $buttons .= '<button type="button" class="fcp-modal-button" data-modal="fcp-modal-' . esc_attr($key) . '">' . esc_html($data['label']) . '</button>';
                 
-                // Bouton popup personnalisé si activé
+                // --- DEBUT MODIFICATION : Bouton Popup Personnalisé ---
                 $custom_btn_active = get_post_meta($post->ID, '_fcp_custom_btn_active_' . $key, true);
                 $custom_btn_label = get_post_meta($post->ID, '_fcp_custom_btn_label_' . $key, true);
                 $custom_btn_content = get_post_meta($post->ID, '_fcp_custom_btn_content_' . $key, true);
                 
                 if ($custom_btn_active === '1' && !empty($custom_btn_label)) {
+                    // 1. Création du bouton
                     $buttons .= '<button type="button" class="fcp-modal-button fcp-custom-popup-button" data-modal="fcp-custom-modal-' . esc_attr($key) . '">' . esc_html($custom_btn_label) . '</button>';
-                }
 
-                // Récupérer l'image de bannière
+                    // 2. Création de la modale associée (qui manquait)
+                    $modals .= '<div id="fcp-custom-modal-' . esc_attr($key) . '" class="fcp-modal">';
+                    $modals .= '<div class="fcp-modal-content">';
+                    $modals .= '<span class="fcp-modal-close">&times;</span>';
+                    
+                    // Bannière pour la modale personnalisée (titre sur fond couleur par défaut)
+                    $modals .= '<div class="fcp-modal-banner">';
+                    $modals .= '<div class="fcp-modal-banner-overlay">';
+                    $modals .= '<h2>' . esc_html($custom_btn_label) . '</h2>';
+                    $modals .= '</div>';
+                    $modals .= '</div>';
+                    
+                    // Corps de la modale avec le contenu libre
+                    $modals .= '<div class="fcp-modal-body">';
+                    $modals .= '<div class="fcp-modal-description">';
+                    $modals .= wpautop($custom_btn_content);
+                    $modals .= '</div>'; // fin description
+                    $modals .= '</div>'; // fin body
+                    
+                    $modals .= '</div>'; // fin content
+                    $modals .= '</div>'; // fin modal
+                }
+                // --- FIN MODIFICATION ---
+
+                // Récupérer l'image de bannière standard
                 $banner_id = get_post_meta($selected, '_fcp_banner_image', true);
                 $banner_url = $banner_id ? wp_get_attachment_url($banner_id) : '';
 
@@ -1007,7 +1031,7 @@ function fcp_append_formule_content($content)
                 $meta_key = '_fcp_items_' . $data['cpt'];
                 $items = get_post_meta($selected, $meta_key, true);
 
-                // Créer la modal
+                // Créer la modal standard
                 $modals .= '<div id="fcp-modal-' . esc_attr($key) . '" class="fcp-modal">';
                 $modals .= '<div class="fcp-modal-content">';
                 $modals .= '<span class="fcp-modal-close">&times;</span>';
@@ -1028,7 +1052,7 @@ function fcp_append_formule_content($content)
                     $modals .= '</div>';
                 }
 
-                // Liste des items
+                // Liste des items (Logique standard existante)
                 if (is_array($items) && !empty($items)) {
                     $items_count = count($items);
                     $column_class = '';
@@ -1193,7 +1217,6 @@ function fcp_append_formule_content($content)
 
     return $output;
 }
-add_filter('the_content', 'fcp_append_formule_content');
 
 /*--------------------------------------------------------------
   ENQUEUE DES SCRIPTS ET STYLES FRONT-END
